@@ -1,9 +1,12 @@
+import java.util.Random;
 import java.util.Scanner;
 
 
 public class TTT {
   private enum Player { X, O }
 
+  private static final Random prng = new Random();
+  private static final String[] asks = { "which spot?", "where to?", "row&col?", "enter coords:", "location?", "grid coords?" };
   private static final Player[] players = { Player.X, Player.O };
   private static Scanner input;
   private static Board board;
@@ -26,22 +29,24 @@ public class TTT {
     }
     return n;
   }
+  private static String randomPrompt() { return asks[prng.nextInt(asks.length)]; }
   private static void askMove(Scanner input, Board board, Move move) {
-    fmt("which spot? ");
+    fmt("%s ", randomPrompt());
     String coords = input.nextLine().toLowerCase();
     while (!board.isValidCoords(coords)) {
-      fmt("not valid. where to? ");
+      fmt("not valid. %s ", randomPrompt());
       coords = input.nextLine().toLowerCase();
     }
     board.setCoords(coords, move);
   }
-
   private static boolean noMoreMoves(Board board) { return (turns >= board.getCols()*board.getRows()); }
+  private static void announceWinner(Player p) { fmt("  %s wins!%n", p.name()); }
   private static void announceTie() { fmt("  tie game%n"); }
 
   public static void main(String[] args) {
     input = new Scanner(System.in);
     move = new Move();
+    cursor = new Move();
     boolean playing = true;
     Player player;
 
@@ -69,7 +74,8 @@ public class TTT {
       }
       clearScreen();
       board.print(System.out);
-      nextTurn();
+      if (board.isWinningMove(move, cursor)) { playing = false; announceWinner(player); }
+      else { nextTurn(); }
       if (noMoreMoves(board)) { playing = false; announceTie(); }
     }
 

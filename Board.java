@@ -63,6 +63,63 @@ class Board {
     return true;
   }
 
+  public boolean isWinningMove(Move move, Move cursor) {
+    char c = charAt(move.col, move.row);
+    int w = placesToWin();
+    int n;
+
+    n = 1;
+    cursor.setTo(move);
+    while(peekWest(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+    cursor.setTo(move);
+    while(peekEast(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+
+    n = 1;
+    cursor.setTo(move);
+    while(peekNorthWest(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+    cursor.setTo(move);
+    while(peekSouthEast(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+
+    n = 1;
+    cursor.setTo(move);
+    while(peekNorth(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+    cursor.setTo(move);
+    while(peekSouth(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+
+    n = 1;
+    cursor.setTo(move);
+    while(peekNorthEast(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+    cursor.setTo(move);
+    while(peekSouthWest(cursor) && (charAt(cursor.col, cursor.row)) == c) { n++; }
+    if (n >= w) { return true; }
+
+    return false;
+  }
+
+  public boolean peek(Move cursor, int dc, int dr) {
+    if (cursor.col + dc < 0 || cursor.col + dc >= cols) { return false; }
+    if (cursor.row + dr < 0 || cursor.row + dr >= rows) { return false; }
+    cursor.col += dc;
+    cursor.row += dr;
+    return true;
+  }
+
+  public boolean peekWest(Move cursor) { return peek(cursor, -1, 0); }
+  public boolean peekNorthWest(Move cursor) { return peek(cursor, -1, -1); }
+  public boolean peekNorth(Move cursor) { return peek(cursor, 0, -1); }
+  public boolean peekNorthEast(Move cursor) { return peek(cursor, +1, -1); }
+  public boolean peekEast(Move cursor) { return peek(cursor, +1, 0); }
+  public boolean peekSouthEast(Move cursor) { return peek(cursor, +1, +1); }
+  public boolean peekSouth(Move cursor) { return peek(cursor, 0, +1); }
+  public boolean peekSouthWest(Move cursor) { return peek(cursor, -1, +1); }
+
   public void setCoords(String coords, Move move) {
     if (Character.isLetter(coords.charAt(0))) {
       move.col = Character.digit(coords.charAt(1), 10);
