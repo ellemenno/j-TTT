@@ -3,21 +3,22 @@ import java.util.Scanner;
 
 
 public class TTT {
-  private enum Player { X, O }
+  private enum Player { X, O, V, S }
 
   private static final Random prng = new Random();
   private static final String[] asks = { "which spot?", "where to?", "row&col?", "enter coords:", "location?", "grid coords?" };
-  private static final Player[] players = { Player.X, Player.O };
+  private static final Player[] players = { Player.X, Player.O, Player.V, Player.S };
   private static Scanner input;
   private static Board board;
   private static Move move;
   private static Move cursor;
+  private static int numPlayers = 2;
   private static int turns = 0;
   private static int turn = 0;
 
   private static void clearScreen() { System.out.print("\u001Bc"); }
   private static void fmt(String template, Object... args) { System.out.format(template, args); }
-  private static void nextTurn() { turns++; turn = turns % players.length; }
+  private static void nextTurn() { turns++; turn = turns % numPlayers; }
   private static int askSize(Scanner input) {
     boolean asking = true;
     int n = 0;
@@ -25,6 +26,17 @@ public class TTT {
       fmt("what size board would you like (10-3)? ");
       n = Integer.parseInt(input.nextLine());
       if (n > 10 || n < 3) { fmt("pick a size from 10 to 3.%n"); }
+      else { asking = false; }
+    }
+    return n;
+  }
+  private static int askPlayers(Scanner input) {
+    boolean asking = true;
+    int n = 0;
+    while (asking) {
+      fmt("how many players (2-4)? ");
+      n = Integer.parseInt(input.nextLine());
+      if (n > 4 || n < 2) { fmt("choose 2, 3, or 4.%n"); }
       else { asking = false; }
     }
     return n;
@@ -51,6 +63,7 @@ public class TTT {
     Player player;
 
     clearScreen();
+    numPlayers = askPlayers(input);
     board = new Board(askSize(input));
     fmt("tic-tac-toe, %d in a row. let's go!%n", board.placesToWin());
     input.nextLine();
@@ -62,11 +75,13 @@ public class TTT {
       player = players[turn];
       fmt("  %s to move. ", player.name());
       switch (player) {
-        case O :
+        case X :
           askMove(input, board, move);
           board.place(move.col, move.row, player.name().charAt(0));
           break;
-        case X :
+        case O :
+        case V :
+        case S :
           // TODO: npc
           askMove(input, board, move);
           board.place(move.col, move.row, player.name().charAt(0));
