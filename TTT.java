@@ -3,9 +3,7 @@ import java.util.Scanner;
 
 
 public class TTT {
-  private enum Player { X, O, V, S }
-
-  private static final Player[] players = { Player.X, Player.O, Player.V, Player.S };
+  private static final Player[] players = Player.roster();
   private static Scanner input;
   private static PrintStream output;
   private static Board board;
@@ -45,14 +43,14 @@ public class TTT {
       switch (player) {
         case X :
           Prompt.askMove(input, output, board, move);
-          board.place(move.col, move.row, player.name().charAt(0));
+          board.place(move.col, move.row, player);
           break;
         case O :
         case V :
         case S :
           // TODO: npc
           Prompt.askMove(input, output, board, move);
-          board.place(move.col, move.row, player.name().charAt(0));
+          board.place(move.col, move.row, player);
           break;
       }
       clearScreen();

@@ -1,4 +1,6 @@
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 class Board {
@@ -8,31 +10,32 @@ class Board {
   private static final String labelC = "0123456789";
   private static final String labelR = "abcdefghij";
   private static final char empty = '.';
-  private final StringBuilder sb = new StringBuilder();
-  private int cols = 0;
-  private int rows = 0;
+  private final List<Player> squares = new ArrayList<>();
+  private int cols = 0; // file
+  private int rows = 0; // rank
   private int toWin = 0;
 
   private void setSize(int size) {
     cols = size;
     rows = size;
     toWin = (size > MIN) ? MIN+1 : MIN;
-    if (sb.length() > 0) { sb.delete(0, sb.length()); }
-    for (int i = 0; i < size*size; i++) { sb.append(empty); }
+    if (squares.size() > 0) { squares.clear(); }
+    for (int i = 0; i < size*size; i++) { squares.add(Player.EMPTY); }
   }
 
   @Override
-  public String toString() { return sb.toString(); }
+  public String toString() { return squares.toString(); }
 
   public void print(PrintStream out) {
     int c, r;
+    Player sq;
     out.format("%n");
     out.format("  %c ", ' ');
-    for (c = 0; c < cols; c++) { out.format("%c ", labelC.charAt(c)); }
+    for (c = 0; c < cols; c++) { out.format("%s ", Player.LABEL.ansiFg(labelC.charAt(c))); }
     out.format("%n");
     for (r = 0; r < rows; r++) {
-      out.format("  %c ", labelR.charAt(r));
-      for (c = 0; c < cols; c++) { out.format("%c ", sb.charAt(r*cols+c)); }
+      out.format("  %s ", Player.LABEL.ansiFg(labelR.charAt(r)));
+      for (c = 0; c < cols; c++) { sq = squares.get(r*cols+c); out.format("%s%s", sq.ansi(), sq.ansiBg(' ')); }
       out.format("%n");
     }
     out.format("%n");
@@ -43,10 +46,10 @@ class Board {
 
   public int placesToWin() { return toWin; }
 
-  public char charAt(int col, int row) { return (sb.charAt(row*cols+col)); }
+  public char charAt(int col, int row) { return (squares.get(row*cols+col).symbol()); }
   public boolean isEmpty(int col, int row) { return (charAt(col, row) == empty); }
 
-  public void place(int col, int row, char p) { sb.setCharAt(row*cols+col, p); }
+  public void place(int col, int row, Player p) { squares.set(row*cols+col, p); }
 
   public boolean isValidCoords(String coords) {
     if (coords.length() != 2) { return false; }
