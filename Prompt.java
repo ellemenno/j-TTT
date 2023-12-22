@@ -11,22 +11,22 @@ public class Prompt {
 
   public static int askPlayers(Scanner input, PrintStream out) {
     boolean asking = true;
-    int n = 0;
+    int n = 0, min = 2, max = 4;
     while (asking) {
-      out.format("how many players (2-4)? ");
+      out.format("how many players (%d-%d)? ", min, max);
       n = Integer.parseInt(input.nextLine());
-      if (n > 4 || n < 2) { out.format("choose 2, 3, or 4.%n"); }
+      if (n > max || n < min) { out.format("choose from %d up to %d.%n", min, max); }
       else { asking = false; }
     }
     return n;
   }
-  public static int askSize(Scanner input, PrintStream out) {
+  public static int askSize(Scanner input, PrintStream out, int numPlayers) {
     boolean asking = true;
-    int n = 0;
+    int n = 0, min = Math.max(3, numPlayers+1), max = 10;
     while (asking) {
-      out.format("what size board (10-3)? ");
+      out.format("what size board (%d-%d)? ", min, max);
       n = Integer.parseInt(input.nextLine());
-      if (n > 10 || n < 3) { out.format("pick a size from 10 to 3.%n"); }
+      if (n > max || n < min) { out.format("pick a size from %d to %d.%n", min, max); }
       else { asking = false; }
     }
     return n;

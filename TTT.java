@@ -20,6 +20,23 @@ public class TTT {
   private static void announceWinner(Player p) { fmt("  %s wins!%n", p.name()); }
   private static void announceTie() { fmt("  tie game%n"); }
 
+  // improve:
+  // find tie game earlier
+  // add menu
+  // back to menu on game completion
+  // quit game with 'q'
+  // restart game with 'r'
+  // introduce npc
+
+  // menu config:
+  // num players (2..4)
+  // player types (human|bot)
+  // bot difficulty (1..3)
+  // board size (3..10)
+  // win size (board size|4)
+  // num pieces (unlimited|board size)
+  // if num pieces >= 4, allow squares?
+
   public static void main(String[] args) {
     input = new Scanner(System.in);
     output = System.out;
@@ -30,8 +47,8 @@ public class TTT {
 
     clearScreen();
     numPlayers = Prompt.askPlayers(input, output);
-    board = new Board(Prompt.askSize(input, output));
-    fmt("tic-tac-toe, %d in a row. hit enter, let's go!%n", board.placesToWin());
+    board = new Board(Prompt.askSize(input, output, numPlayers));
+    fmt("tic-tac-toe, %d in a row. now hit enter, let's go!%n", board.placesToWin());
     input.nextLine();
 
     clearScreen();
@@ -39,6 +56,7 @@ public class TTT {
 
     while (playing) {
       player = players[turn];
+      fmt("  %d empty squares.%n", board.emptySquares());
       fmt("  %s to move. ", player.name());
       switch (player) {
         case X :

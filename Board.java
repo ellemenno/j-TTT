@@ -46,6 +46,12 @@ class Board {
 
   public int placesToWin() { return toWin; }
 
+  public int emptySquares() {
+    int count = 0;
+    for (Player sq : squares) { if (sq == Player.EMPTY) { count++; } }
+    return count;
+  }
+
   public char charAt(int col, int row) { return (squares.get(row*cols+col).symbol()); }
   public boolean isEmpty(int col, int row) { return (charAt(col, row) == empty); }
 
